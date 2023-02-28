@@ -24,7 +24,7 @@ import io.airlift.airline.ParseOptionMissingValueException;
 import org.openapitools.codegen.cmd.*;
 
 import java.util.Locale;
-
+import java.util.Arrays;
 import static org.openapitools.codegen.Constants.CLI_NAME;
 
 /**
@@ -63,6 +63,11 @@ public class OpenAPIGenerator {
                 .withCommands(AuthorTemplate.class);
 
         try {
+            System.out.println("testtesttest");
+            System.out.println(Arrays.toString(args));
+            Integer str = Integer.valueOf(args.length);
+            System.out.printf(str.toString());
+            
             builder.build().parse(args).run();
 
             // If CLI runs without a command, consider this an error. This exists after initial parse/run

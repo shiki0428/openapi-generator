@@ -34,15 +34,17 @@ public class CodegenConfigLoader {
         StringBuilder availableConfigs = new StringBuilder();
 
         for (CodegenConfig config : loader) {
+            System.out.println(config.getName()+":"+config);
             if (config.getName().equals(name)) {
                 return config;
             }
 
             availableConfigs.append(config.getName()).append("\n");
         }
-
+        System.out.println("------------------\n"+availableConfigs.toString());
         // else try to load directly
         try {
+            
             return (CodegenConfig) Class.forName(name).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new GeneratorNotFoundException("Can't load config class with name '".concat(name) + "'\nAvailable:\n" + availableConfigs, e);

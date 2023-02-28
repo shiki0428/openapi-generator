@@ -17,7 +17,7 @@
 package org.openapitools.codegen.config;
 
 import java.util.Properties;
-
+import java.util.Map.Entry;
 /**
  * GlobalSettings encapsulates SystemProperties, since the codegen mechanism heavily relies on a stable,
  * non-changing System Property Basis. Using plain System.(get|set|clear)Property raises Race-Conditions in combination
@@ -47,6 +47,10 @@ public class GlobalSettings {
 
     public static String getProperty(String key) {
         return properties.get().getProperty(key);
+    }
+
+	public static Properties getAll() {
+        return properties.get();
     }
 
     public static void setProperty(String key, String value) {

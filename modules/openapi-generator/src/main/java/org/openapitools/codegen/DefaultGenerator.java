@@ -106,15 +106,17 @@ public class DefaultGenerator implements Generator {
 
     public DefaultGenerator(Boolean dryRun) {
         this.dryRun = Boolean.TRUE.equals(dryRun);
-        LOGGER.info("Generating with dryRun={}", this.dryRun);
+        LOGGER.info("MyGenerating with dryRun={}", this.dryRun);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public Generator opts(ClientOptInput opts) {
         this.opts = opts;
+        System.out.println("optsの中身"+opts.toString());
         this.openAPI = opts.getOpenAPI();
         this.config = opts.getConfig();
+        //template読み込み
         List<TemplateDefinition> userFiles = opts.getUserDefinedTemplates();
         if (userFiles != null) {
             this.userDefinedTemplates = Collections.unmodifiableList(userFiles);
@@ -124,8 +126,11 @@ public class DefaultGenerator implements Generator {
 
         if (this.dryRun) {
             this.templateProcessor = new DryRunTemplateManager(templateManagerOptions);
+
         } else {
             TemplatingEngineAdapter templatingEngine = this.config.getTemplatingEngine();
+            System.out.println(templatingEngine.toString());
+            System.out.println("tttttttttt");
 
             if (templatingEngine instanceof MustacheEngineAdapter) {
                 MustacheEngineAdapter mustacheEngineAdapter = (MustacheEngineAdapter) templatingEngine;
@@ -532,6 +537,7 @@ public class DefaultGenerator implements Generator {
         allProcessedModels = config.postProcessAllModels(allProcessedModels);
 
         // generate files based on processed models
+        // shiki
         for (String modelName : allProcessedModels.keySet()) {
             ModelsMap models = allProcessedModels.get(modelName);
             models.put("modelPackage", config.modelPackage());
@@ -967,12 +973,27 @@ public class DefaultGenerator implements Generator {
         } else {
             // This exists here rather than in the method which generates supporting files to avoid accidentally adding files after this metadata.
             if (generateSupportingFiles) {
+                System.out.println("generateSupportingFiles:");
                 generateFilesMetadata(files);
             }
         }
 
         // post-process
         config.postProcess();
+
+        System.out.println("################## property info #############################################");
+        config.additionalProperties().forEach(
+            (key,value) -> System.out.println(key+ ":"+ value)
+        );
+        System.out.println("#####################################################################################");
+
+        GlobalSettings.setProperty("aa","test");
+        System.out.println("################## global settings #############################################");
+        Properties prop =  GlobalSettings.getAll();
+        for (Object key: prop.keySet()) {
+            System.out.println(key + ": " + prop.getProperty(key.toString()));
+        }
+        System.out.println("#####################################################################################");
 
         // reset GlobalSettings, so that the running thread can be reused for another generator-run
         GlobalSettings.reset();
@@ -1051,11 +1072,20 @@ public class DefaultGenerator implements Generator {
     }
 
     protected File processTemplateToFile(Map<String, Object> templateData, String templateName, String outputFilename, boolean shouldGenerate, String skippedByOption) throws IOException {
+
         return processTemplateToFile(templateData, templateName, outputFilename, shouldGenerate, skippedByOption, this.config.getOutputDir());
     }
 
     private File processTemplateToFile(Map<String, Object> templateData, String templateName, String outputFilename, boolean shouldGenerate, String skippedByOption, String intendedOutputDir) throws IOException {
+        System.out.println("########################## template data #####################################################");
+
+        templateData.forEach(
+            (key,value) -> System.out.println(key+ ":"+value)
+        );
+        System.out.println("#####################################################################################");
+
         String adjustedOutputFilename = outputFilename.replaceAll("//", "/").replace('/', File.separatorChar);
+        System.out.println(adjustedOutputFilename);
         File target = new File(adjustedOutputFilename);
         if (ignoreProcessor.allowsFile(target)) {
             if (shouldGenerate) {

@@ -160,6 +160,7 @@ public class TemplateManager implements TemplatingExecutor, TemplateProcessor {
     public File write(Map<String, Object> data, String template, File target) throws IOException {
         if (this.engineAdapter.handlesFile(template)) {
             // Only pass files with valid endings through template engine
+            System.out.println("testtesttest");
             String templateContent = this.engineAdapter.compileTemplate(this, data, template);
             return writeToFile(target.getPath(), templateContent);
         } else {
@@ -252,6 +253,11 @@ public class TemplateManager implements TemplatingExecutor, TemplateProcessor {
             File parent = Paths.get(output.getParent()).toFile();
             parent.mkdirs();
         }
+
+        String encoder = new String(contents);
+        System.out.println("-----------------");
+        System.out.println(encoder);
+        System.out.println("-----------------");
         Files.write(output.toPath(), contents);
 
         return output;

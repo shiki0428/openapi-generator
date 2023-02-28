@@ -335,6 +335,7 @@ public class Generate extends OpenApiGeneratorCommand {
 
         // Generator name should not be validated here, as it's validated in toClientOptInput
         if (isNotEmpty(generatorName)) {
+            System.out.println("generatorName:"+ generatorName);
             configurator.setGeneratorName(generatorName);
         }
 
@@ -462,10 +463,13 @@ public class Generate extends OpenApiGeneratorCommand {
         applyServerVariablesKvpList(serverVariableOverrides, configurator);
 
         try {
+            System.out.printf("Generate.java 実行中");
             final ClientOptInput clientOptInput = configurator.toClientOptInput();
 
             // this null check allows us to inject for unit testing.
             if (generator == null) {
+                System.out.printf("Generate.java isDryRun");
+
                 generator = new DefaultGenerator(isDryRun);
             }
 

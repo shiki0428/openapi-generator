@@ -24,13 +24,15 @@ import org.openapitools.codegen.api.TemplateDefinition;
 import org.openapitools.codegen.auth.AuthParser;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ClientOptInput {
     private CodegenConfig config;
     private OpenAPI openAPI;
     private List<AuthorizationValue> auths;
     private List<TemplateDefinition> userDefinedTemplates;
-
+    public String template;
     public ClientOptInput openAPI(OpenAPI openAPI) {
         this.setOpenAPI(openAPI);
         return this;
@@ -110,5 +112,15 @@ public class ClientOptInput {
         if (this.config != null) {
             this.config.setOpenAPI(this.openAPI);
         }
+    }
+
+    @Override
+    public String toString()
+    {   
+        for(int i = 0; i<this.userDefinedTemplates.size(); i++){
+            template = template + this.userDefinedTemplates.get(i).toString();
+        }
+        
+        return "{config:" + this.config + " openAPI:" + this.openAPI + "template:" + template +"}";
     }
 }
