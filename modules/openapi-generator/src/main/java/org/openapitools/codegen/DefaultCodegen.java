@@ -1478,6 +1478,7 @@ public class DefaultCodegen implements CodegenConfig {
         return toApiName(name);
     }
 
+
     /**
      * Return the file name of the Api Documentation
      *
@@ -1519,6 +1520,7 @@ public class DefaultCodegen implements CodegenConfig {
      */
     @Override
     public String toModelFilename(String name) {
+        System.out.println("camelize:"+camelize(name));
         return camelize(name);
     }
 
@@ -5823,6 +5825,12 @@ public class DefaultCodegen implements CodegenConfig {
 
     @Override
     public String apiFilename(String templateName, String tag) {
+        String suffix = apiTemplateFiles().get(templateName);
+        return apiFileFolder() + File.separator + toApiFilename(tag) + suffix;
+    }
+
+    @Override
+    public String apiFilename_http_method_and_operation_id(String templateName, String tag, String http_method, String operation_id) {
         String suffix = apiTemplateFiles().get(templateName);
         return apiFileFolder() + File.separator + toApiFilename(tag) + suffix;
     }

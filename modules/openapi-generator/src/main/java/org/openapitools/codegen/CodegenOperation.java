@@ -344,7 +344,7 @@ public class CodegenOperation {
         sb.append(", isCallbackRequest=").append(isCallbackRequest);
         sb.append(", uniqueItems='").append(uniqueItems);
         sb.append(", path='").append(path).append('\'');
-        sb.append(", operationId='").append(operationId).append('\'');
+        sb.append(", <<operationId='").append(operationId).append('\'');
         sb.append(", returnType='").append(returnType).append('\'');
         sb.append(", httpMethod='").append(httpMethod).append('\'');
         sb.append(", returnBaseType='").append(returnBaseType).append('\'');
