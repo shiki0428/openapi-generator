@@ -2551,6 +2551,14 @@ public class DefaultCodegen implements CodegenConfig {
         return camelize(apiNamePrefix + "_" + name + "_" + apiNameSuffix);
     }
 
+    @Override
+    public String toApiName_http_method(String name, String http_method) {
+        if (name.length() == 0) {
+            return "DefaultApi";
+        }
+        return camelize(apiNamePrefix + http_method + "_" + name + "_" + apiNameSuffix);
+    }
+
     /**
      * Converts the OpenAPI schema name to a model name suitable for the current code generator.
      * May be overridden for each programming language.
@@ -5833,6 +5841,19 @@ public class DefaultCodegen implements CodegenConfig {
     public String apiFilename_http_method_and_operation_id(String templateName, String tag, String http_method, String operation_id) {
         String suffix = apiTemplateFiles().get(templateName);
         return apiFileFolder() + File.separator + toApiFilename(tag) + suffix;
+    }
+
+    @Override
+    public String toApiFilename_http_method_and_operation_id(String tag, String http_method, String operation_id) {
+        return apiFileFolder() + File.separator + toApiFilename(tag);
+    }
+
+    @Override
+    public  String toApiName_http_method_and_operation_id(String name, String http_method, String operation_id){
+        if (name.length() == 0) {
+            return "DefaultApi";
+        }
+        return camelize(apiNamePrefix + "_" + name + "_" + http_method + "_" + operation_id + "_" + apiNameSuffix);  
     }
 
     @Override

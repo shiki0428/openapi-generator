@@ -627,6 +627,7 @@ public class DefaultGenerator implements Generator {
                     CodegenOperation ops_content = ops.get(0);
                     String http_method = ops_content.httpMethod.toLowerCase();
                     String operation_id = ops_content.operationId.toLowerCase();
+                    String upper_operation_id = ops_content.operationId;
                     String path = ops_content.path.toString();
                     path = path.replaceFirst("/","");
                     path = path.replaceAll("/","_");
@@ -643,10 +644,13 @@ public class DefaultGenerator implements Generator {
                     operation.put("apiPackage", config.apiPackage());
                     operation.put("modelPackage", config.modelPackage());
                     operation.putAll(config.additionalProperties());
-                    operation.put("classname", config.toApiName(tag));
+                    // operation.put("classname", config.toApiName(tag));
+                    // operation.put("classname", config.toApiName_http_method(tag,http_method));
+                    operation.put("classname", config.toApiName_http_method_and_operation_id(tag,http_method,upper_operation_id));
                     operation.put("classVarName", config.toApiVarName(tag));
                     operation.put("importPath", config.toApiImport(tag));
-                    operation.put("classFilename", config.toApiFilename(tag));
+                    // operation.put("classFilename", config.toApiFilename(tag));
+                    operation.put("classFilename", config.toApiFilename_http_method_and_operation_id(tag, http_method, path));
                     operation.put("strictSpecBehavior", config.isStrictSpecBehavior());
 
                     if (allModels == null || allModels.isEmpty()) {
@@ -1290,6 +1294,8 @@ public class DefaultGenerator implements Generator {
 
         Set<String> allImports = new ConcurrentSkipListSet<>();
         for (CodegenOperation op : ops) {
+            System.out.println("allImports");
+            System.out.println(op.imports.toString());
             allImports.addAll(op.imports);
         }
 
@@ -1341,7 +1347,7 @@ public class DefaultGenerator implements Generator {
 
         mappedImports.forEach((key, value) -> {
             Map<String, String> im = new LinkedHashMap<>();
-            im.put("import", key);
+            im.put("import", key.replaceAll("/","."));
             im.put("classname", value);
             result.add(im);
         });

@@ -83,6 +83,8 @@ public interface CodegenConfig {
 
     String toApiName(String name);
 
+    String toApiName_http_method(String name, String http_method);
+
     String toApiVarName(String name);
 
     String toModelName(String name);
@@ -216,6 +218,10 @@ public interface CodegenConfig {
     String apiFilename(String templateName, String tag);
 
     String apiFilename_http_method_and_operation_id(String templateName, String tag, String http_method, String operation_id); 
+
+    String toApiFilename_http_method_and_operation_id(String tag, String http_method, String operation_id);
+    
+    String toApiName_http_method_and_operation_id(String name, String http_method, String operation_id);
 
     String apiTestFilename(String templateName, String tag);
 
