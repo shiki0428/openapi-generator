@@ -113,7 +113,7 @@ public class DefaultGenerator implements Generator {
     @Override
     public Generator opts(ClientOptInput opts) {
         this.opts = opts;
-        System.out.println("optsの中身"+opts.toString());
+        // System.out.println("optsの中身"+opts.toString());
         this.openAPI = opts.getOpenAPI();
         this.config = opts.getConfig();
         //template読み込み
@@ -129,8 +129,8 @@ public class DefaultGenerator implements Generator {
 
         } else {
             TemplatingEngineAdapter templatingEngine = this.config.getTemplatingEngine();
-            System.out.println(templatingEngine.toString());
-            System.out.println("tttttttttt");
+            // System.out.println(templatingEngine.toString());
+            // System.out.println("tttttttttt");
 
             if (templatingEngine instanceof MustacheEngineAdapter) {
                 MustacheEngineAdapter mustacheEngineAdapter = (MustacheEngineAdapter) templatingEngine;
@@ -250,12 +250,12 @@ public class DefaultGenerator implements Generator {
         }
 
         if (GlobalSettings.getProperty("debugOpenAPI") != null) {
-            System.out.println(SerializerUtils.toJsonString(openAPI));
+            // System.out.println(SerializerUtils.toJsonString(openAPI));
         } else if (GlobalSettings.getProperty("debugSwagger") != null) {
             // This exists for backward compatibility
             // We fall to this block only if debugOpenAPI is null. No need to dump this twice.
             LOGGER.info("Please use system property 'debugOpenAPI' instead of 'debugSwagger'.");
-            System.out.println(SerializerUtils.toJsonString(openAPI));
+            // System.out.println(SerializerUtils.toJsonString(openAPI));
         }
 
         config.processOpts();
@@ -286,7 +286,7 @@ public class DefaultGenerator implements Generator {
         config.additionalProperties().put("inputSpec", config.getInputSpec());
 
         if (openAPI.getExtensions() != null) {
-            System.out.println("x-tags  exists!! configure");
+            // System.out.println("x-tags  exists!! configure");
             config.vendorExtensions().putAll(openAPI.getExtensions());
         }
 
@@ -411,9 +411,9 @@ public class DefaultGenerator implements Generator {
     private void generateModel(List<File> files, Map<String, Object> models, String modelName) throws IOException {
         for (String templateName : config.modelTemplateFiles().keySet()) {
             String filename = config.modelFilename(templateName, modelName);
-            System.out.println("########### file name ###########");
-            System.out.println(filename);
-            System.out.println("########### file name ###########");
+            // System.out.println("########### file name ###########");
+            // System.out.println(filename);
+            // System.out.println("########### file name ###########");
             File written = processTemplateToFile(models, templateName, filename, generateModels, CodegenConstants.MODELS);
             if (written != null) {
                 files.add(written);
@@ -463,8 +463,8 @@ public class DefaultGenerator implements Generator {
                 getGeneratorPropertyDefaultSwitch(CodegenConstants.SKIP_FORM_MODEL, true);
 
         if (config.vendorExtensions().containsKey("x-tags")) {
-            System.out.println("x-tags  exists!!");
-            System.out.println(config.vendorExtensions().toString());
+            // System.out.println("x-tags  exists!!");
+            // System.out.println(config.vendorExtensions().toString());
         }
                 
         // process models only
@@ -616,8 +616,8 @@ public class DefaultGenerator implements Generator {
         for (String tag : paths.keySet()) {
             try {
                 List<CodegenOperation> ops_list = paths.get(tag);
-                System.out.println("<<CodegenOperation>>:"+ops_list.toString());
-                System.out.println("<<CodegenOperation>>:"+ops_list.size());
+                // System.out.println("<<CodegenOperation>>:"+ops_list.toString());
+                // System.out.println("<<CodegenOperation>>:"+ops_list.size());
 
                 //opsを一つずつ処理するように変更したい
 
@@ -660,7 +660,7 @@ public class DefaultGenerator implements Generator {
                     }
 
                     if (!config.vendorExtensions().isEmpty()) {
-                        System.out.println("x-tags  exists!! api");
+                        // System.out.println("x-tags  exists!! api");
                         operation.put("vendorExtensions", config.vendorExtensions());
                     }
 
@@ -692,13 +692,13 @@ public class DefaultGenerator implements Generator {
                     allOperations.add(operation);
 
                     addAuthenticationSwitches(operation);
-                    System.out.println("operation_length:"+operation.size());
+                    // System.out.println("operation_length:"+operation.size());
                     for (String templateName : config.apiTemplateFiles().keySet()) {
                         String filename = config.apiFilename_http_method_and_operation_id(templateName, tag, http_method, path);
                         File written = processTemplateToFile(operation, templateName, filename, generateApis, CodegenConstants.APIS);
-                        System.out.println("############ written ############");
-                        System.out.println(operation);     
-                        System.out.println("############ written end ############");               
+                        // System.out.println("############ written ############");
+                        // System.out.println(operation);     
+                        // System.out.println("############ written end ############");               
                         if (written != null) {
                             files.add(written);
                             if (config.isEnablePostProcessFile() && !dryRun) {
@@ -706,6 +706,32 @@ public class DefaultGenerator implements Generator {
                             }
                         }
                     }
+
+                    // addAuthenticationSwitches(operation);
+                    // System.out.println("operation_length:"+operation.size());
+                    for (String templateName : config.apiTemplateFiles().keySet()) {
+                        String filename = config.apiFilename_http_method_and_operation_id_op(templateName, tag, http_method, path);
+
+                        File file = new File(filename);
+                        // Boolean is_file_exist;
+                        // if (file.exists()){
+                        //     is_file_exist = "";
+                        // } else {
+                        //     is_file_exist = "1";
+                        // };
+                        
+                        File written = processTemplateToFile(operation, "op_"+templateName, filename, !file.exists(), CodegenConstants.APIS);
+                        // System.out.println("############ written ############");
+                        // System.out.println(CodegenConstants.APIS);     
+                        // System.out.println("############ written end ############");               
+                        if (written != null) {
+                            files.add(written);
+                            if (config.isEnablePostProcessFile() && !dryRun) {
+                                config.postProcessFile(written, "api");
+                            }
+                        }
+                    }
+
 
                     // to generate api test files
                     for (String templateName : config.apiTestTemplateFiles().keySet()) {
@@ -1007,7 +1033,7 @@ public class DefaultGenerator implements Generator {
         } else {
             // This exists here rather than in the method which generates supporting files to avoid accidentally adding files after this metadata.
             if (generateSupportingFiles) {
-                System.out.println("generateSupportingFiles:");
+                // System.out.println("generateSupportingFiles:");
                 generateFilesMetadata(files);
             }
         }
@@ -1015,19 +1041,19 @@ public class DefaultGenerator implements Generator {
         // post-process
         config.postProcess();
 
-        System.out.println("################## property info #############################################");
-        config.additionalProperties().forEach(
-            (key,value) -> System.out.println(key+ ":"+ value)
-        );
-        System.out.println("#####################################################################################");
+        // System.out.println("################## property info #############################################");
+        // config.additionalProperties().forEach(
+        //     (key,value) -> System.out.println(key+ ":"+ value)
+        // );
+        // System.out.println("#####################################################################################");
 
-        GlobalSettings.setProperty("aa","test");
-        System.out.println("################## global settings #############################################");
-        Properties prop =  GlobalSettings.getAll();
-        for (Object key: prop.keySet()) {
-            System.out.println(key + ": " + prop.getProperty(key.toString()));
-        }
-        System.out.println("#####################################################################################");
+        // GlobalSettings.setProperty("aa","test");
+        // System.out.println("################## global settings #############################################");
+        // Properties prop =  GlobalSettings.getAll();
+        // for (Object key: prop.keySet()) {
+        //     System.out.println(key + ": " + prop.getProperty(key.toString()));
+        // }
+        // System.out.println("#####################################################################################");
 
         // reset GlobalSettings, so that the running thread can be reused for another generator-run
         GlobalSettings.reset();
@@ -1111,24 +1137,24 @@ public class DefaultGenerator implements Generator {
     }
 
     private File processTemplateToFile(Map<String, Object> templateData, String templateName, String outputFilename, boolean shouldGenerate, String skippedByOption, String intendedOutputDir) throws IOException {
-        System.out.println("########################## template data #####################################################");
+        // System.out.println("########################## template data #####################################################");
 
-        templateData.forEach(
-            (key,value) -> System.out.println(key+ ":"+value)
-        );
+        // templateData.forEach(
+        //     (key,value) -> System.out.println(key+ ":"+value)
+        // );
         // System.out.println(templateData.getModels());
-        System.out.println("#####################################################################################");
+        // System.out.println("#####################################################################################");
 
         String adjustedOutputFilename = outputFilename.replaceAll("//", "/").replace('/', File.separatorChar);
-        System.out.println(adjustedOutputFilename);
+        // System.out.println(adjustedOutputFilename);
         File target = new File(adjustedOutputFilename);
         if (ignoreProcessor.allowsFile(target)) {
             if (shouldGenerate) {
                 Path outDir = java.nio.file.Paths.get(intendedOutputDir).toAbsolutePath();
                 Path absoluteTarget = target.toPath().toAbsolutePath();
-                if (!absoluteTarget.startsWith(outDir)) {
-                    throw new RuntimeException(String.format(Locale.ROOT, "Target files must be generated within the output directory; absoluteTarget=%s outDir=%s", absoluteTarget, outDir));
-                }
+                // if (!absoluteTarget.startsWith(outDir)) {
+                //     throw new RuntimeException(String.format(Locale.ROOT, "Target files must be generated within the output directory; absoluteTarget=%s outDir=%s", absoluteTarget, outDir));
+                // }
                 return this.templateProcessor.write(templateData, templateName, target);
             } else {
                 this.templateProcessor.skip(target.toPath(), String.format(Locale.ROOT, "Skipped by %s options supplied by user.", skippedByOption));
@@ -1294,8 +1320,8 @@ public class DefaultGenerator implements Generator {
 
         Set<String> allImports = new ConcurrentSkipListSet<>();
         for (CodegenOperation op : ops) {
-            System.out.println("allImports");
-            System.out.println(op.imports.toString());
+            // System.out.println("allImports");
+            // System.out.println(op.imports.toString());
             allImports.addAll(op.imports);
         }
 

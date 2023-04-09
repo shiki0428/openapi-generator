@@ -34,14 +34,14 @@ public class CodegenConfigLoader {
         StringBuilder availableConfigs = new StringBuilder();
 
         for (CodegenConfig config : loader) {
-            System.out.println(config.getName()+":"+config);
+            // System.out.println(config.getName()+":"+config);
             if (config.getName().equals(name)) {
                 return config;
             }
 
             availableConfigs.append(config.getName()).append("\n");
         }
-        System.out.println("------------------\n"+availableConfigs.toString());
+        // System.out.println("------------------\n"+availableConfigs.toString());
         // else try to load directly
         try {
             

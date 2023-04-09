@@ -63,10 +63,10 @@ public class OpenAPIGenerator {
                 .withCommands(AuthorTemplate.class);
 
         try {
-            System.out.println("testtesttest");
-            System.out.println(Arrays.toString(args));
+            // System.out.println("testtesttest");
+            // System.out.println(Arrays.toString(args));
             Integer str = Integer.valueOf(args.length);
-            System.out.printf(str.toString());
+            // System.out.printf(str.toString());
             
             builder.build().parse(args).run();
 
